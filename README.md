@@ -54,3 +54,11 @@ This project not only aims to address the common inventory management challenges
 skills in applying Enterprise Java technologies to real-world problems. The Inventory Management System project is a practical 
 demonstration of my ability to create a scalable, secure, and user-friendly solution that meets the needs of businesses striving 
 for operational excellence in inventory control.
+
+
+## Design
+
+* [User Stories](DesignDocuments/userStories.md)
+
+
+### [Project Plan](ProjectPlan.md)
