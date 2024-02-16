@@ -18,7 +18,6 @@ and web service consumption, the application seeks to:
 
 1. **Ensure Secure Access and Data Integrity:**
     - Implement robust authentication and authorization mechanisms to secure the system.
-    - Utilize Log4J for detailed logging, allowing for activity tracking and error resolution.
 
 2. **Enable Efficient Database Operations:**
     - Leverage JPA/Hibernate for seamless interaction with a relational database.
@@ -26,7 +25,6 @@ and web service consumption, the application seeks to:
 
 3. **Provide Real-time Updates and External Data Integration:**
     - Integrate with external APIs to provide real-time updates on stock levels, supplier information, and other relevant data.
-    - Demonstrate the ability to consume web services to enhance the application's functionality.
 
 4. **Create a User-friendly Interface:**
     - Design an intuitive and responsive user interface for easy product management, sales tracking, and report generation.
@@ -37,8 +35,8 @@ and web service consumption, the application seeks to:
     - Showcase the ability to plan, troubleshoot, debug, and document the development process effectively.
 
 This project not only aims to address the common inventory management challenges but also serves as a platform to showcase my 
-skills in applying Enterprise Java technologies to real-world problems. The Inventory Management System project is a practical 
-demonstration of my ability to create a scalable, secure, and user-friendly solution that meets the needs of businesses striving 
+skills in applying all my knowledge to real-world problems. The Inventory Management System project is a practical 
+demonstration of my ability to create a secure, and user-friendly solution that meets the needs of businesses striving 
 for operational excellence in inventory control.
 
 
