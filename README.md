@@ -2,11 +2,11 @@
 
 ## Problem Statement:
 
-In today's dynamic business landscape, efficient inventory management stands as a critical factor for 
-the success of companies across industries. The traditional methods of manual tracking and record-keeping 
-often lead to inaccuracies, operational inefficiencies, and hinder the ability to adapt swiftly to 
-market changes. As businesses strive for optimization and competitiveness, the need for an advanced 
-Inventory Management System becomes increasingly evident.
+Managing inventory is a critical aspect of business operations, and many companies face challenges in 
+maintaining accurate stock levels, minimizing errors, and optimizing their supply chain. Manual 
+inventory tracking can lead to inefficiencies, overstocking, and stockouts, affecting order 
+fulfillment and customer satisfaction. Additionally, the lack of real-time visibility into inventory 
+data makes it challenging for businesses to make informed decisions and adapt to changing market demands.
 
 ### The challenges faced by organizations include
 
