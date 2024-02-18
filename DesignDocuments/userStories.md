@@ -26,3 +26,6 @@
 
 9. **As a user, I want to log out from the system.**
    - Users should be able to log out from their accounts.
+
+10. **Implement Web Service for External Data Integration.**
+   - As a user, I want to integrate external data into the Inventory Management System through a web service (API Gateway).
