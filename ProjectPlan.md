@@ -13,7 +13,7 @@
 
 ### Week 6
 
-- [ ] Design and create Database structure.
+- [X] Design and create Database structure.
 - [ ] Create Logic to create, read, update and delete records (CRUD) from database using Hibernate.
 - [ ] Insert loggers within code to catch errors, info, etc.
 - [ ] Create unit test.
