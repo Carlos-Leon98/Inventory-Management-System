@@ -16,6 +16,7 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
+    @Column(name = "order_detail_id")
     private int orderDetailId;
     @ManyToOne
     @JoinColumn(name = "order_id")

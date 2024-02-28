@@ -21,11 +21,8 @@ public class Location {
     private String name;
     @Column(name = "created_at")
     private Timestamp createdAt;
-    @OneToMany(mappedBy = "Locations", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Section> sections;
-    @ManyToOne
-    @JoinColumn(name="product_id")
-    private Product product;
 
     /**
      * No-arg constructor.
@@ -108,24 +105,6 @@ public class Location {
     }
 
     /**
-     * Gets product.
-     *
-     * @return the product
-     */
-    public Product getProduct() {
-        return product;
-    }
-
-    /**
-     * Sets products.
-     *
-     * @param product the product
-     */
-    public void setAuthor(Product product) {
-        this.product = product;
-    }
-
-    /**
      * Set a string with the information of this class
      * @return a string with the information of the class
      */
@@ -136,7 +115,6 @@ public class Location {
                 ", name='" + name + '\'' +
                 ", createdAt=" + createdAt +
                 ", sections=" + sections +
-                ", product=" + product +
                 '}';
     }
 }

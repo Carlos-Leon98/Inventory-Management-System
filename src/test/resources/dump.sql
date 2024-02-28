@@ -5,11 +5,12 @@ DROP TABLE IF EXISTS Products;
 DROP TABLE IF EXISTS Sections;
 DROP TABLE IF EXISTS Locations;
 DROP TABLE IF EXISTS Categories;
-DROP TABLE IF EXISTS Roles;
 DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Roles;
+
 
 -- Create Roles Table
-CREATE TABLE Roles (
+CREATE TABLE IF NOT EXISTS Roles (
                        role_id INT PRIMARY KEY AUTO_INCREMENT,
                        name VARCHAR(255) NOT NULL,
                        description VARCHAR(255),
@@ -17,7 +18,7 @@ CREATE TABLE Roles (
 );
 
 -- Create Users Table
-CREATE TABLE Users (
+CREATE TABLE IF NOT EXISTS Users (
                        user_id INT PRIMARY KEY AUTO_INCREMENT,
                        username VARCHAR(255) UNIQUE NOT NULL,
                        password VARCHAR(255) NOT NULL,
@@ -30,21 +31,21 @@ CREATE TABLE Users (
 );
 
 -- Create Categories Table
-CREATE TABLE Categories (
+CREATE TABLE IF NOT EXISTS Categories (
                             category_id INT PRIMARY KEY AUTO_INCREMENT,
                             name VARCHAR(255) NOT NULL,
                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create Locations Table
-CREATE TABLE Locations (
+CREATE TABLE IF NOT EXISTS Locations (
                            location_id INT PRIMARY KEY AUTO_INCREMENT,
                            name VARCHAR(255) NOT NULL,
                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create Sections Table
-CREATE TABLE Sections (
+CREATE TABLE IF NOT EXISTS Sections (
                           section_id INT PRIMARY KEY AUTO_INCREMENT,
                           name VARCHAR(255) NOT NULL,
                           location_id INT,
@@ -53,7 +54,7 @@ CREATE TABLE Sections (
 );
 
 -- Create Products Table
-CREATE TABLE Products (
+CREATE TABLE IF NOT EXISTS Products (
                           product_id INT PRIMARY KEY AUTO_INCREMENT,
                           name VARCHAR(255) NOT NULL,
                           description TEXT,
@@ -71,7 +72,7 @@ CREATE TABLE Products (
 );
 
 -- Create Customers Table
-CREATE TABLE Customers (
+CREATE TABLE IF NOT EXISTS Customers (
                            customer_id INT PRIMARY KEY AUTO_INCREMENT,
                            first_name VARCHAR(255),
                            last_name VARCHAR(255),
@@ -83,7 +84,7 @@ CREATE TABLE Customers (
 );
 
 -- Create Orders Table
-CREATE TABLE Orders (
+CREATE TABLE IF NOT EXISTS Orders (
                         order_id INT PRIMARY KEY AUTO_INCREMENT,
                         customer_id INT,
                         order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -94,7 +95,7 @@ CREATE TABLE Orders (
 );
 
 -- Create OrderDetails Table
-CREATE TABLE OrderDetails (
+CREATE TABLE IF NOT EXISTS OrderDetails (
                               order_detail_id INT PRIMARY KEY AUTO_INCREMENT,
                               order_id INT,
                               product_id INT,

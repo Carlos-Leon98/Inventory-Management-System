@@ -21,7 +21,12 @@ public class Category {
     private String categoryName;
     @Column(name = "created_at")
     private Timestamp createdAt;
-    @OneToMany(mappedBy = "Products", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "category",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
     private Set<Product> products;
 
     /**

@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:mysql://localhost:3306/inventory_system_manager</property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+
+        <property name="connection.username">student</property>
+        <property name="connection.password">student</property>
+
+        <property name="hibernate.c3p0.min_size">5</property>
+        <property name="hibernate.c3p0.max_size">20</property>
+        <property name="hibernate.c3p0.timeout">300</property>
+        <property name="hibernate.c3p0.max_statements">50</property>
+        <property name="hibernate.c3p0.idle_test_period">3000</property>
+
+        <mapping class="entity.Category" />
+        <mapping class="entity.Customer" />
+        <mapping class="entity.Location" />
+        <mapping class="entity.Order" />
+        <mapping class="entity.OrderDetail" />
+        <mapping class="entity.Product" />
+        <mapping class="entity.Role" />
+        <mapping class="entity.Section" />
+        <mapping class="entity.User" />
+
+
+    </session-factory>
+
+</hibernate-configuration>

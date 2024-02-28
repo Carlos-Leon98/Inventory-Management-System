@@ -15,6 +15,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
+    @Column(name = "role_id")
     private int roleId;
     @Column(name = "name")
     private String name;

@@ -31,7 +31,7 @@ public class Customer {
     private String shippingAddress;
     @Column(name = "created_at")
     private Timestamp createdAt;
-    @OneToMany(mappedBy = "Orders", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders;
 
     /**

@@ -15,6 +15,7 @@ public class Section {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
+    @Column(name = "section_id")
     private int sectionId;
     @Column(name = "name")
     private String name;

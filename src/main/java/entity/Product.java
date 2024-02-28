@@ -16,6 +16,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
+    @Column(name = "product_id")
     private int productId;
     @Column(name = "name")
     private String name;
