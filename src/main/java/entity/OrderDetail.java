@@ -1,5 +1,7 @@
 package entity;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -8,12 +10,24 @@ import java.sql.Timestamp;
  * in an order in the Inventory Management System.
  * @author cleonrivas
  */
+@Entity(name = "OrderDetail")
+@Table(name = "OrderDetails")
 public class OrderDetail {
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native", strategy = "native")
     private int orderDetailId;
-    private int orderId;
-    private int productId;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+    @Column(name = "quantity")
     private int quantity;
+    @Column(name = "unit_price")
     private BigDecimal unitPrice;
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
     /**
@@ -41,39 +55,39 @@ public class OrderDetail {
     }
 
     /**
-     * Get the order ID associated with the order detail.
+     * Get the order associated with the order detail.
      *
-     * @return The order ID.
+     * @return The order.
      */
-    public int getOrderId() {
-        return orderId;
+    public Order getOrder() {
+        return order;
     }
 
     /**
-     * Set the order ID associated with the order detail.
+     * Set the order associated with the order detail.
      *
-     * @param orderId The order ID to set.
+     * @param order The order to set.
      */
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     /**
-     * Get the product ID associated with the order detail.
+     * Get the product associated with the order detail.
      *
-     * @return The product ID.
+     * @return The product.
      */
-    public int getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     /**
-     * Set the product ID associated with the order detail.
+     * Set the product associated with the order detail.
      *
-     * @param productId The product ID to set.
+     * @param product The product to set.
      */
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setProductId(Product product) {
+        this.product = product;
     }
 
     /**
@@ -138,8 +152,8 @@ public class OrderDetail {
     public String toString() {
         return "OrderDetail{" +
                 "orderDetailId=" + orderDetailId +
-                ", orderId=" + orderId +
-                ", productId=" + productId +
+                ", order=" + order +
+                ", product=" + product +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +
                 ", createdAt=" + createdAt +

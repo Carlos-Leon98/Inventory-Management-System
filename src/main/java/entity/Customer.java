@@ -1,20 +1,38 @@
 package entity;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.sql.Timestamp;
+import java.util.Set;
 
 /**
  * Represents a customer in the Inventory Management System.
  * @author cleonrivas
  */
+@Entity(name = "Customer")
+@Table(name = "Customers")
 public class Customer {
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native", strategy = "native")
+    @Column(name = "customer_id")
     private int customerId;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "email")
     private String email;
+    @Column(name = "phone_number")
     private String phoneNumber;
+    @Column(name = "billing_address")
     private String billingAddress;
+    @Column(name = "shipping_address")
     private String shippingAddress;
+    @Column(name = "created_at")
     private Timestamp createdAt;
+    @OneToMany(mappedBy = "Orders", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Order> orders;
 
     /**
      * No-arg constructor
@@ -167,6 +185,24 @@ public class Customer {
     }
 
     /**
+     * Gets the collection of orders that belongs to customer.
+     *
+     * @return The set of orders that belongs to customer.
+     */
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    /**
+     * Sets the collection of orders that belongs to customer.
+     *
+     * @param orders The set of orders that belongs to customer.
+     */
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
+    }
+
+    /**
      * Set a string with the information of this class
      * @return a string with the information of the class
      */
@@ -181,6 +217,7 @@ public class Customer {
                 ", billingAddress='" + billingAddress + '\'' +
                 ", shippingAddress='" + shippingAddress + '\'' +
                 ", createdAt=" + createdAt +
+                ", orders=" + orders +
                 '}';
     }
 }

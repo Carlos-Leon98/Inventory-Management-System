@@ -1,16 +1,30 @@
 package entity;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.sql.Timestamp;
+import java.util.Set;
 
 /**
  * Represents a section in the Inventory Management System.
  * @author cleonrivas
  */
+@Entity(name = "Section")
+@Table(name = "Sections")
 public class Section {
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native", strategy = "native")
     private int sectionId;
+    @Column(name = "name")
     private String name;
-    private int locationId;
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
+    @Column(name = "created_at")
     private Timestamp createdAt;
+    @OneToMany(mappedBy = "section")
+    private Set<Product> products;
 
     /**
      * No-arg constructor.
@@ -55,21 +69,21 @@ public class Section {
     }
 
     /**
-     * Get the location ID associated with the section.
+     * Get the location associated with the section.
      *
-     * @return The location ID.
+     * @return The location.
      */
-    public int getLocationId() {
-        return locationId;
+    public Location getLocation() {
+        return location;
     }
 
     /**
-     * Set the location ID associated with the section.
+     * Set the location associated with the section.
      *
-     * @param locationId The location ID to set.
+     * @param location The location to set.
      */
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     /**
@@ -91,6 +105,26 @@ public class Section {
     }
 
     /**
+     * Gets the collection of products that have the same
+     * category.
+     *
+     * @return The set of products that have the same category.
+     */
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    /**
+     * Sets the collection of products that have the same
+     * category.
+     *
+     * @param products The set of products that have the same category.
+     */
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
+    /**
      * Set a string with the information of this class
      * @return a string with the information of the class
      */
@@ -99,8 +133,9 @@ public class Section {
         return "Section{" +
                 "sectionId=" + sectionId +
                 ", name='" + name + '\'' +
-                ", locationId=" + locationId +
+                ", location=" + location +
                 ", createdAt=" + createdAt +
+                ", products=" + products +
                 '}';
     }
 }

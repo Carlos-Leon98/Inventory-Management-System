@@ -1,16 +1,32 @@
 package entity;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.sql.Timestamp;
 
 /**
  * Represents a user in the Inventory Management System.
  * @author cleonrivas
  */
+@Entity(name = "User")
+@Table(name = "Users")
 public class User {
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native", strategy = "native")
     private int userId;
+    @Column(name = "username")
     private String username;
+    @Column(name = "password")
     private String password;
-    private int roleId;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
     /**
@@ -74,21 +90,57 @@ public class User {
     }
 
     /**
-     * Get the role ID associated with the user.
+     * Get the first name of the customer.
      *
-     * @return The role ID.
+     * @return The first name of the customer.
      */
-    public int getRoleId() {
-        return roleId;
+    public String getFirstName() {
+        return firstName;
     }
 
     /**
-     * Set the role ID associated with the user.
+     * Set the first name of the customer.
      *
-     * @param roleId The role ID to set.
+     * @param firstName The first name of the customer to set.
      */
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     * Get the last name of the customer.
+     *
+     * @return The last name of the customer.
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * Set the last name of the customer.
+     *
+     * @param lastName The last name of the customer to set.
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    /**
+     * Get the role associated with the user.
+     *
+     * @return The role.
+     */
+    public Role getRole() {
+        return role;
+    }
+
+    /**
+     * Set the role associated with the user.
+     *
+     * @param role The role to set.
+     */
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     /**
@@ -119,7 +171,9 @@ public class User {
                 "userId=" + userId +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", roleId=" + roleId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", role=" + role +
                 ", createdAt=" + createdAt +
                 '}';
     }

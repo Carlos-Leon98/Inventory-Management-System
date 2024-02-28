@@ -1,16 +1,29 @@
 package entity;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.sql.Timestamp;
+import java.util.Set;
 
 /**
  * Represents a user role in the Inventory Management System.
  * @author cleonrivas
  */
+@Entity(name = "Role")
+@Table(name = "Roles")
 public class Role {
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native", strategy = "native")
     private int roleId;
+    @Column(name = "name")
     private String name;
+    @Column(name = "description")
     private String description;
+    @Column(name = "created_at")
     private Timestamp createdAt;
+    @OneToMany(mappedBy = "role")
+    private Set<User> users;
 
     /**
      * No-arg constructor.
@@ -91,6 +104,24 @@ public class Role {
     }
 
     /**
+     * Gets the collection of users with a specific role.
+     *
+     * @return The set of users with a specific role.
+     */
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    /**
+     * Sets the collection of users with a specific role.
+     *
+     * @param users The set of users with a specific role.
+     */
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    /**
      * Set a string with the information of this class
      * @return a string with the information of the class
      */
@@ -101,6 +132,7 @@ public class Role {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", createdAt=" + createdAt +
+                ", users=" + users +
                 '}';
     }
 }

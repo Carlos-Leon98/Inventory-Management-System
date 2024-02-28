@@ -1,18 +1,40 @@
 package entity;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Set;
+
 
 /**
  * Represents an order in the Inventory Management System.
  * @author cleonrivas
  */
+@Entity(name = "Order")
+@Table(name = "Orders")
 public class Order {
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native", strategy = "native")
+    @Column(name = "order_id")
     private int orderId;
-    private int customerId;
+    @ManyToOne
+    private Customer customerId;
+    @ManyToMany
+    @JoinTable(
+            name = "OrderDetails",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<Product> products;
+    @Column(name = "order_date")
     private Timestamp orderDate;
+    @Column(name = "total_amount")
     private BigDecimal totalAmount;
+    @Column(name = "status")
     private String status;
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
     /**
@@ -44,7 +66,7 @@ public class Order {
      *
      * @return The customer ID.
      */
-    public int getCustomerId() {
+    public Customer getCustomerId() {
         return customerId;
     }
 
@@ -53,8 +75,28 @@ public class Order {
      *
      * @param customerId The customer ID to set.
      */
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(Customer customerId) {
         this.customerId = customerId;
+    }
+
+    /**
+     * Gets the collection of products that have the same
+     * category.
+     *
+     * @return The set of products that have the same category.
+     */
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    /**
+     * Sets the collection of products that have the same
+     * category.
+     *
+     * @param products The set of products that have the same category.
+     */
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 
     /**
@@ -138,6 +180,7 @@ public class Order {
         return "Order{" +
                 "orderId=" + orderId +
                 ", customerId=" + customerId +
+                ", products=" + products +
                 ", orderDate=" + orderDate +
                 ", totalAmount=" + totalAmount +
                 ", status='" + status + '\'' +

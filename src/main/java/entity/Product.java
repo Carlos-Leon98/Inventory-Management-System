@@ -1,24 +1,47 @@
 package entity;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Set;
 
 /**
  * Represents a product in the Inventory Management System.
  * @author cleonrivas
  */
+@Entity(name = "Product")
+@Table(name = "Products")
 public class Product {
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native", strategy = "native")
     private int productId;
+    @Column(name = "name")
     private String name;
+    @Column(name = "description")
     private String description;
+    @Column(name = "quantity")
     private int quantity;
-    private int categoryId;
-    private int locationId;
-    private int sectionId;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
+    @ManyToOne
+    @JoinColumn(name = "section_id")
+    private Section section;
+    @Column(name = "price")
     private BigDecimal price;
+    @Column(name = "sales_price")
     private BigDecimal salesPrice;
+    @Column(name = "isbn")
     private String isbn;
+    @Column(name = "created_at")
     private Timestamp createdAt;
+    @OneToMany(mappedBy = "product")
+    private Set<OrderDetail> orderDetails;
 
     /**
      * No-arg constructor.
@@ -99,57 +122,57 @@ public class Product {
     }
 
     /**
-     * Get the category ID associated with the product.
+     * Get the category associated with the product.
      *
-     * @return The category ID.
+     * @return The category.
      */
-    public int getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
     /**
-     * Set the category ID associated with the product.
+     * Set the category associated with the product.
      *
-     * @param categoryId The category ID to set.
+     * @param category The category to set.
      */
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategoryId(Category category) {
+        this.category = category;
     }
 
     /**
-     * Get the location ID associated with the product.
+     * Get the location associated with the product.
      *
-     * @return The location ID.
+     * @return The location.
      */
-    public int getLocationId() {
-        return locationId;
+    public Location getLocation() {
+        return location;
     }
 
     /**
-     * Set the location ID associated with the product.
+     * Set the location associated with the product.
      *
-     * @param locationId The location ID to set.
+     * @param location The location to set.
      */
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
+    public void setLocationId(Location location) {
+        this.location = location;
     }
 
     /**
-     * Get the section ID associated with the product.
+     * Get the section associated with the product.
      *
-     * @return The section ID.
+     * @return The section.
      */
-    public int getSectionId() {
-        return sectionId;
+    public Section getSection() {
+        return section;
     }
 
     /**
-     * Set the section ID associated with the product.
+     * Set the section associated with the product.
      *
-     * @param sectionId The section ID to set.
+     * @param section The section to set.
      */
-    public void setSectionId(int sectionId) {
-        this.sectionId = sectionId;
+    public void setSectionId(Section section) {
+        this.section = section;
     }
 
     /**
@@ -225,6 +248,24 @@ public class Product {
     }
 
     /**
+     * Gets the collection of order details.
+     *
+     * @return The set of order details.
+     */
+    public Set<OrderDetail> getProducts() {
+        return orderDetails;
+    }
+
+    /**
+     * Sets the collection of order details.
+     *
+     * @param orderDetails The set of order details.
+     */
+    public void setProducts(Set<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
+    /**
      * Set a string with the information of this class
      * @return a string with the information of the class
      */
@@ -235,13 +276,14 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", quantity=" + quantity +
-                ", categoryId=" + categoryId +
-                ", locationId=" + locationId +
-                ", sectionId=" + sectionId +
+                ", category=" + category +
+                ", location=" + location +
+                ", section=" + section +
                 ", price=" + price +
                 ", salesPrice=" + salesPrice +
                 ", isbn='" + isbn + '\'' +
                 ", createdAt=" + createdAt +
+                ", orderDetails=" + orderDetails +
                 '}';
     }
 }
