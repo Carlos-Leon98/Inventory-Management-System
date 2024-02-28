@@ -1,10 +1,13 @@
 package persistence;
 
 import entity.Product;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 
 import java.util.List;
 
@@ -14,16 +17,7 @@ import java.util.List;
  */
 public class ProductDAO {
 
-    private final SessionFactory sessionFactory;
-
-    /**
-     * Constructs a ProductDAO with the provided SessionFactory.
-     *
-     * @param sessionFactory The Hibernate SessionFactory.
-     */
-    public ProductDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
 
     /**
      * Retrieves a Product by its ID.
@@ -32,9 +26,10 @@ public class ProductDAO {
      * @return The Product with the specified ID, or null if not found.
      */
     public Product getById(int id) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(Product.class, id);
-        }
+        Session session = sessionFactory.openSession();
+        Product Product = session.get( Product.class, id );
+        session.close();
+        return Product;
     }
 
     /**
@@ -43,11 +38,11 @@ public class ProductDAO {
      * @param product The Product to be updated or inserted.
      */
     public void update(Product product) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.saveOrUpdate(product);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.merge(product);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -57,12 +52,14 @@ public class ProductDAO {
      * @return The ID of the newly inserted Product.
      */
     public int insert(Product product) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            int id = (int) session.save(product);
-            transaction.commit();
-            return id;
-        }
+        int id = 0;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(product);
+        transaction.commit();
+        id = product.getProductId();
+        session.close();
+        return id;
     }
 
     /**
@@ -71,11 +68,11 @@ public class ProductDAO {
      * @param product The Product to be deleted.
      */
     public void delete(Product product) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.delete(product);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(product);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -84,9 +81,15 @@ public class ProductDAO {
      * @return A list of all Products.
      */
     public List<Product> getAll() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Product> query = session.createQuery("FROM Product", Product.class);
-            return query.getResultList();
-        }
+        Session session = sessionFactory.openSession();
+
+        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> query = builder.createQuery(Product.class);
+        Root<Product> root = query.from(Product.class);
+        List<Product> products = session.createSelectionQuery( query ).getResultList();
+
+        session.close();
+
+        return products;
     }
 }

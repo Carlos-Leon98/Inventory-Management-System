@@ -1,10 +1,13 @@
 package persistence;
 
 import entity.Order;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 
 import java.util.List;
 
@@ -14,16 +17,7 @@ import java.util.List;
  */
 public class OrderDAO {
 
-    private final SessionFactory sessionFactory;
-
-    /**
-     * Constructs an OrderDAO with the provided SessionFactory.
-     *
-     * @param sessionFactory The Hibernate SessionFactory.
-     */
-    public OrderDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
 
     /**
      * Retrieves an Order by its ID.
@@ -32,9 +26,10 @@ public class OrderDAO {
      * @return The Order with the specified ID, or null if not found.
      */
     public Order getById(int id) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(Order.class, id);
-        }
+        Session session = sessionFactory.openSession();
+        Order Order = session.get( Order.class, id );
+        session.close();
+        return Order;
     }
 
     /**
@@ -43,11 +38,11 @@ public class OrderDAO {
      * @param order The Order to be updated or inserted.
      */
     public void update(Order order) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.saveOrUpdate(order);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.merge(order);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -57,12 +52,14 @@ public class OrderDAO {
      * @return The ID of the newly inserted Order.
      */
     public int insert(Order order) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            int id = (int) session.save(order);
-            transaction.commit();
-            return id;
-        }
+        int id = 0;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(order);
+        transaction.commit();
+        id = order.getOrderId();
+        session.close();
+        return id;
     }
 
     /**
@@ -71,11 +68,11 @@ public class OrderDAO {
      * @param order The Order to be deleted.
      */
     public void delete(Order order) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.delete(order);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(order);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -84,9 +81,15 @@ public class OrderDAO {
      * @return A list of all Orders.
      */
     public List<Order> getAll() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Order> query = session.createQuery("FROM Order", Order.class);
-            return query.getResultList();
-        }
+        Session session = sessionFactory.openSession();
+
+        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Order> query = builder.createQuery(Order.class);
+        Root<Order> root = query.from(Order.class);
+        List<Order> orders = session.createSelectionQuery( query ).getResultList();
+
+        session.close();
+
+        return orders;
     }
 }

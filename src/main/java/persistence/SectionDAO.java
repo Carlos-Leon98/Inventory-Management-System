@@ -1,10 +1,14 @@
 package persistence;
 
+import entity.Product;
 import entity.Section;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 
 import java.util.List;
 
@@ -14,16 +18,7 @@ import java.util.List;
  */
 public class SectionDAO {
 
-    private final SessionFactory sessionFactory;
-
-    /**
-     * Constructs a SectionDAO with the provided SessionFactory.
-     *
-     * @param sessionFactory The Hibernate SessionFactory.
-     */
-    public SectionDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
 
     /**
      * Retrieves a Section by its ID.
@@ -32,9 +27,10 @@ public class SectionDAO {
      * @return The Section with the specified ID, or null if not found.
      */
     public Section getById(int id) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(Section.class, id);
-        }
+        Session session = sessionFactory.openSession();
+        Section Section = session.get( Section.class, id );
+        session.close();
+        return Section;
     }
 
     /**
@@ -43,11 +39,11 @@ public class SectionDAO {
      * @param section The Section to be updated or inserted.
      */
     public void update(Section section) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.saveOrUpdate(section);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.merge(section);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -57,12 +53,14 @@ public class SectionDAO {
      * @return The ID of the newly inserted Section.
      */
     public int insert(Section section) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            int id = (int) session.save(section);
-            transaction.commit();
-            return id;
-        }
+        int id = 0;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(section);
+        transaction.commit();
+        id = section.getSectionId();
+        session.close();
+        return id;
     }
 
     /**
@@ -71,11 +69,11 @@ public class SectionDAO {
      * @param section The Section to be deleted.
      */
     public void delete(Section section) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.delete(section);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(section);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -84,9 +82,15 @@ public class SectionDAO {
      * @return A list of all Sections.
      */
     public List<Section> getAll() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Section> query = session.createQuery("FROM Section", Section.class);
-            return query.getResultList();
-        }
+        Session session = sessionFactory.openSession();
+
+        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Section> query = builder.createQuery(Section.class);
+        Root<Section> root = query.from(Section.class);
+        List<Section> sections = session.createSelectionQuery( query ).getResultList();
+
+        session.close();
+
+        return sections;
     }
 }

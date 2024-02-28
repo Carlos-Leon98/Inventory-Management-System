@@ -1,10 +1,14 @@
 package persistence;
 
 import entity.Category;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+
 import java.util.List;
 
 /**
@@ -13,16 +17,7 @@ import java.util.List;
  */
 public class CategoryDAO {
 
-    private final SessionFactory sessionFactory;
-
-    /**
-     * Constructs a CategoryDAO with the provided SessionFactory.
-     *
-     * @param sessionFactory The Hibernate SessionFactory.
-     */
-    public CategoryDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
 
     /**
      * Retrieves a Category by its ID.
@@ -31,9 +26,10 @@ public class CategoryDAO {
      * @return The Category with the specified ID, or null if not found.
      */
     public Category getById(int id) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(Category.class, id);
-        }
+        Session session = sessionFactory.openSession();
+        Category Category = session.get( Category.class, id );
+        session.close();
+        return Category;
     }
 
     /**
@@ -42,11 +38,11 @@ public class CategoryDAO {
      * @param category The Category to be updated or inserted.
      */
     public void update(Category category) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.saveOrUpdate(category);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.merge(category);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -56,12 +52,14 @@ public class CategoryDAO {
      * @return The ID of the newly inserted Category.
      */
     public int insert(Category category) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            int id = (int) session.save(category);
-            transaction.commit();
-            return id;
-        }
+        int id = 0;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(category);
+        transaction.commit();
+        id = category.getCategoryId();
+        session.close();
+        return id;
     }
 
     /**
@@ -70,11 +68,11 @@ public class CategoryDAO {
      * @param category The Category to be deleted.
      */
     public void delete(Category category) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.delete(category);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(category);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -83,9 +81,15 @@ public class CategoryDAO {
      * @return A list of all Categories.
      */
     public List<Category> getAll() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Category> query = session.createQuery("FROM Category", Category.class);
-            return query.getResultList();
-        }
+        Session session = sessionFactory.openSession();
+
+        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Category> query = builder.createQuery(Category.class);
+        Root<Category> root = query.from(Category.class);
+        List<Category> categories = session.createSelectionQuery( query ).getResultList();
+
+        session.close();
+
+        return categories;
     }
 }

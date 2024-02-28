@@ -1,10 +1,13 @@
 package persistence;
 
 import entity.User;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 
 import java.util.List;
 
@@ -14,16 +17,7 @@ import java.util.List;
  */
 public class UserDAO {
 
-    private final SessionFactory sessionFactory;
-
-    /**
-     * Constructs a UserDAO with the provided SessionFactory.
-     *
-     * @param sessionFactory The Hibernate SessionFactory.
-     */
-    public UserDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
 
     /**
      * Retrieves a User by its ID.
@@ -32,9 +26,10 @@ public class UserDAO {
      * @return The User with the specified ID, or null if not found.
      */
     public User getById(int id) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(User.class, id);
-        }
+        Session session = sessionFactory.openSession();
+        User User = session.get( User.class, id );
+        session.close();
+        return User;
     }
 
     /**
@@ -43,11 +38,11 @@ public class UserDAO {
      * @param user The User to be updated or inserted.
      */
     public void update(User user) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.saveOrUpdate(user);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.merge(user);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -57,12 +52,14 @@ public class UserDAO {
      * @return The ID of the newly inserted User.
      */
     public int insert(User user) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            int id = (int) session.save(user);
-            transaction.commit();
-            return id;
-        }
+        int id = 0;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(user);
+        transaction.commit();
+        id = user.getUserId();
+        session.close();
+        return id;
     }
 
     /**
@@ -71,11 +68,11 @@ public class UserDAO {
      * @param user The User to be deleted.
      */
     public void delete(User user) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.delete(user);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(user);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -84,9 +81,15 @@ public class UserDAO {
      * @return A list of all Users.
      */
     public List<User> getAll() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<User> query = session.createQuery("FROM User", User.class);
-            return query.getResultList();
-        }
+        Session session = sessionFactory.openSession();
+
+        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<User> query = builder.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+        List<User> users = session.createSelectionQuery( query ).getResultList();
+
+        session.close();
+
+        return users;
     }
 }

@@ -1,10 +1,13 @@
 package persistence;
 
 import entity.OrderDetail;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 
 import java.util.List;
 
@@ -14,16 +17,7 @@ import java.util.List;
  */
 public class OrderDetailDAO {
 
-    private final SessionFactory sessionFactory;
-
-    /**
-     * Constructs an OrderDetailDAO with the provided SessionFactory.
-     *
-     * @param sessionFactory The Hibernate SessionFactory.
-     */
-    public OrderDetailDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
 
     /**
      * Retrieves an OrderDetail by its ID.
@@ -32,9 +26,10 @@ public class OrderDetailDAO {
      * @return The OrderDetail with the specified ID, or null if not found.
      */
     public OrderDetail getById(int id) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(OrderDetail.class, id);
-        }
+        Session session = sessionFactory.openSession();
+        OrderDetail OrderDetail = session.get( OrderDetail.class, id );
+        session.close();
+        return OrderDetail;
     }
 
     /**
@@ -43,11 +38,11 @@ public class OrderDetailDAO {
      * @param orderDetail The OrderDetail to be updated or inserted.
      */
     public void update(OrderDetail orderDetail) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.saveOrUpdate(orderDetail);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.merge(orderDetail);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -57,12 +52,14 @@ public class OrderDetailDAO {
      * @return The ID of the newly inserted OrderDetail.
      */
     public int insert(OrderDetail orderDetail) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            int id = (int) session.save(orderDetail);
-            transaction.commit();
-            return id;
-        }
+        int id = 0;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(orderDetail);
+        transaction.commit();
+        id = orderDetail.getOrderDetailId();
+        session.close();
+        return id;
     }
 
     /**
@@ -71,11 +68,11 @@ public class OrderDetailDAO {
      * @param orderDetail The OrderDetail to be deleted.
      */
     public void delete(OrderDetail orderDetail) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.delete(orderDetail);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(orderDetail);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -84,9 +81,15 @@ public class OrderDetailDAO {
      * @return A list of all OrderDetails.
      */
     public List<OrderDetail> getAll() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<OrderDetail> query = session.createQuery("FROM OrderDetail", OrderDetail.class);
-            return query.getResultList();
-        }
+        Session session = sessionFactory.openSession();
+
+        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<OrderDetail> query = builder.createQuery(OrderDetail.class);
+        Root<OrderDetail> root = query.from(OrderDetail.class);
+        List<OrderDetail> orderDetails = session.createSelectionQuery( query ).getResultList();
+
+        session.close();
+
+        return orderDetails;
     }
 }

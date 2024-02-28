@@ -1,10 +1,13 @@
 package persistence;
 
 import entity.Location;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 
 import java.util.List;
 
@@ -14,16 +17,7 @@ import java.util.List;
  */
 public class LocationDAO {
 
-    private final SessionFactory sessionFactory;
-
-    /**
-     * Constructs a LocationDAO with the provided SessionFactory.
-     *
-     * @param sessionFactory The Hibernate SessionFactory.
-     */
-    public LocationDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
 
     /**
      * Retrieves a Location by its ID.
@@ -32,9 +26,10 @@ public class LocationDAO {
      * @return The Location with the specified ID, or null if not found.
      */
     public Location getById(int id) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(Location.class, id);
-        }
+        Session session = sessionFactory.openSession();
+        Location Location = session.get( Location.class, id );
+        session.close();
+        return Location;
     }
 
     /**
@@ -43,11 +38,11 @@ public class LocationDAO {
      * @param location The Location to be updated or inserted.
      */
     public void update(Location location) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.saveOrUpdate(location);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.merge(location);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -57,12 +52,14 @@ public class LocationDAO {
      * @return The ID of the newly inserted Location.
      */
     public int insert(Location location) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            int id = (int) session.save(location);
-            transaction.commit();
-            return id;
-        }
+        int id = 0;
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(location);
+        transaction.commit();
+        id = location.getLocationId();
+        session.close();
+        return id;
     }
 
     /**
@@ -71,11 +68,11 @@ public class LocationDAO {
      * @param location The Location to be deleted.
      */
     public void delete(Location location) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.delete(location);
-            transaction.commit();
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(location);
+        transaction.commit();
+        session.close();
     }
 
     /**
@@ -84,9 +81,15 @@ public class LocationDAO {
      * @return A list of all Locations.
      */
     public List<Location> getAll() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<Location> query = session.createQuery("FROM Location", Location.class);
-            return query.getResultList();
-        }
+        Session session = sessionFactory.openSession();
+
+        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Location> query = builder.createQuery(Location.class);
+        Root<Location> root = query.from(Location.class);
+        List<Location> locations = session.createSelectionQuery( query ).getResultList();
+
+        session.close();
+
+        return locations;
     }
 }
