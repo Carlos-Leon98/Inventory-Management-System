@@ -8,6 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class CategoryDAO {
 
     SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
+    private static final Logger logger = LogManager.getLogger(CategoryDAO.class);
 
     /**
      * Retrieves a Category by its ID.
@@ -26,10 +29,25 @@ public class CategoryDAO {
      * @return The Category with the specified ID, or null if not found.
      */
     public Category getById(int id) {
-        Session session = sessionFactory.openSession();
-        Category Category = session.get( Category.class, id );
-        session.close();
-        return Category;
+        try {
+            logger.info("Category ID: " + id);
+
+            Session session = sessionFactory.openSession();
+            Category Category = session.get(Category.class, id);
+            session.close();
+
+            logger.info("Category found.");
+
+            return Category;
+
+        } catch (Exception e) {
+            logger.error(
+                    "Error finding Category: " +
+                    e.getMessage()
+            );
+            throw e;
+        }
+
     }
 
     /**
@@ -38,11 +56,28 @@ public class CategoryDAO {
      * @param category The Category to be updated or inserted.
      */
     public void update(Category category) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.merge(category);
-        transaction.commit();
-        session.close();
+        try {
+            logger.info(
+                    "Updating Category: {}",
+                    category
+            );
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.merge(category);
+            transaction.commit();
+            session.close();
+
+            logger.info("Category Updated.");
+        } catch (Exception e) {
+            logger.error(
+                    "Error updating Category: {}",
+                    e.getMessage(),
+                    e
+            );
+            throw e;
+        }
+
     }
 
     /**
@@ -52,14 +87,31 @@ public class CategoryDAO {
      * @return The ID of the newly inserted Category.
      */
     public int insert(Category category) {
-        int id = 0;
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.persist(category);
-        transaction.commit();
-        id = category.getCategoryId();
-        session.close();
-        return id;
+        try {
+            logger.info(
+                    "Category to insert: {}",
+                    category
+            );
+
+            int id = 0;
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.persist(category);
+            transaction.commit();
+            id = category.getCategoryId();
+            session.close();
+
+            logger.info("Category Inserted.");
+
+            return id;
+        } catch (Exception e) {
+            logger.error(
+                    "Error Inserting Category: " +
+                    e.getMessage()
+            );
+            throw e;
+        }
+
     }
 
     /**
@@ -68,11 +120,26 @@ public class CategoryDAO {
      * @param category The Category to be deleted.
      */
     public void delete(Category category) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.delete(category);
-        transaction.commit();
-        session.close();
+        try {
+            logger.info(
+                    "Category to delete: {}",
+                    category
+            );
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.delete(category);
+            transaction.commit();
+            session.close();
+
+            logger.info("Category Inserted.");
+        } catch (Exception e) {
+            logger.error(
+                    "Error deleting Category: {}",
+                    e.getMessage(), e
+            );
+            throw e;
+        }
     }
 
     /**
@@ -81,15 +148,25 @@ public class CategoryDAO {
      * @return A list of all Categories.
      */
     public List<Category> getAll() {
-        Session session = sessionFactory.openSession();
+        try {
+            Session session = sessionFactory.openSession();
 
-        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Category> query = builder.createQuery(Category.class);
-        Root<Category> root = query.from(Category.class);
-        List<Category> categories = session.createSelectionQuery( query ).getResultList();
+            HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Category> query = builder.createQuery(Category.class);
+            Root<Category> root = query.from(Category.class);
+            List<Category> categories = session.createSelectionQuery(
+                    query
+            ).getResultList();
 
-        session.close();
+            session.close();
 
-        return categories;
+            logger.info("All categories displayed successfully.");
+
+            return categories;
+        } catch (Exception e) {
+            logger.error("Error: " + e.getMessage());
+            throw e;
+        }
+
     }
 }

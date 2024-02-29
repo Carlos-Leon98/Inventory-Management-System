@@ -1,6 +1,5 @@
 package persistence;
 
-import entity.Product;
 import entity.Role;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -9,6 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import java.util.List;
 public class RoleDAO {
 
     SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
+    private static final Logger logger = LogManager.getLogger(CategoryDAO.class);
 
     /**
      * Retrieves a Role by its ID.
@@ -27,10 +29,24 @@ public class RoleDAO {
      * @return The Role with the specified ID, or null if not found.
      */
     public Role getById(int id) {
-        Session session = sessionFactory.openSession();
-        Role Role = session.get( Role.class, id );
-        session.close();
-        return Role;
+        try {
+            logger.info("Role ID: " + id);
+
+            Session session = sessionFactory.openSession();
+            Role Role = session.get(Role.class, id);
+            session.close();
+
+            logger.info("Role found.");
+
+            return Role;
+
+        } catch (Exception e) {
+            logger.error(
+                    "Error finding Role: " +
+                            e.getMessage()
+            );
+            throw e;
+        }
     }
 
     /**
@@ -39,11 +55,27 @@ public class RoleDAO {
      * @param role The Role to be updated or inserted.
      */
     public void update(Role role) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.merge(role);
-        transaction.commit();
-        session.close();
+        try {
+            logger.info(
+                    "Updating Role: {}",
+                    role
+            );
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.merge(role);
+            transaction.commit();
+            session.close();
+
+            logger.info("Role Updated.");
+        } catch (Exception e) {
+            logger.error(
+                    "Error updating Role: {}",
+                    e.getMessage(),
+                    e
+            );
+            throw e;
+        }
     }
 
     /**
@@ -53,14 +85,30 @@ public class RoleDAO {
      * @return The ID of the newly inserted Role.
      */
     public int insert(Role role) {
-        int id = 0;
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.persist(role);
-        transaction.commit();
-        id = role.getRoleId();
-        session.close();
-        return id;
+        try {
+            logger.info(
+                    "Role to insert: {}",
+                    role
+            );
+
+            int id = 0;
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.persist(role);
+            transaction.commit();
+            id = role.getRoleId();
+            session.close();
+
+            logger.info("Role Inserted.");
+
+            return id;
+        } catch (Exception e) {
+            logger.error(
+                    "Error Inserting Role: " +
+                            e.getMessage()
+            );
+            throw e;
+        }
     }
 
     /**
@@ -69,11 +117,26 @@ public class RoleDAO {
      * @param role The Role to be deleted.
      */
     public void delete(Role role) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.delete(role);
-        transaction.commit();
-        session.close();
+        try {
+            logger.info(
+                    "Role to delete: {}",
+                    role
+            );
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.delete(role);
+            transaction.commit();
+            session.close();
+
+            logger.info("Role Inserted.");
+        } catch (Exception e) {
+            logger.error(
+                    "Error deleting Role: {}",
+                    e.getMessage(), e
+            );
+            throw e;
+        }
     }
 
     /**
@@ -82,15 +145,24 @@ public class RoleDAO {
      * @return A list of all Roles.
      */
     public List<Role> getAll() {
-        Session session = sessionFactory.openSession();
+        try {
+            Session session = sessionFactory.openSession();
 
-        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Role> query = builder.createQuery(Role.class);
-        Root<Role> root = query.from(Role.class);
-        List<Role> roles = session.createSelectionQuery( query ).getResultList();
+            HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Role> query = builder.createQuery(Role.class);
+            Root<Role> root = query.from(Role.class);
+            List<Role> roles = session.createSelectionQuery(
+                    query
+            ).getResultList();
 
-        session.close();
+            session.close();
 
-        return roles;
+            logger.info("All roles displayed successfully.");
+
+            return roles;
+        } catch (Exception e) {
+            logger.error("Error: " + e.getMessage());
+            throw e;
+        }
     }
 }

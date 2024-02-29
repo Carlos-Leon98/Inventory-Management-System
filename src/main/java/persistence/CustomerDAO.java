@@ -1,6 +1,5 @@
 package persistence;
 
-import entity.Category;
 import entity.Customer;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -9,6 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class CustomerDAO {
 
     SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
-
+    private static final Logger logger = LogManager.getLogger(CategoryDAO.class);
 
     /**
      * Retrieves a Customer by its ID.
@@ -28,10 +29,24 @@ public class CustomerDAO {
      * @return The Customer with the specified ID, or null if not found.
      */
     public Customer getById(int id) {
-        Session session = sessionFactory.openSession();
-        Customer Customer = session.get( Customer.class, id );
-        session.close();
-        return Customer;
+        try {
+            logger.info("Customer ID: " + id);
+
+            Session session = sessionFactory.openSession();
+            Customer Customer = session.get(Customer.class, id);
+            session.close();
+
+            logger.info("Customer found.");
+
+            return Customer;
+
+        } catch (Exception e) {
+            logger.error(
+                    "Error finding Customer: " +
+                            e.getMessage()
+            );
+            throw e;
+        }
     }
 
     /**
@@ -40,11 +55,27 @@ public class CustomerDAO {
      * @param customer The Customer to be updated or inserted.
      */
     public void update(Customer customer) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.merge(customer);
-        transaction.commit();
-        session.close();
+        try {
+            logger.info(
+                    "Updating Customer: {}",
+                    customer
+            );
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.merge(customer);
+            transaction.commit();
+            session.close();
+
+            logger.info("Customer Updated.");
+        } catch (Exception e) {
+            logger.error(
+                    "Error updating Customer: {}",
+                    e.getMessage(),
+                    e
+            );
+            throw e;
+        }
     }
 
     /**
@@ -54,14 +85,30 @@ public class CustomerDAO {
      * @return The ID of the newly inserted Customer.
      */
     public int insert(Customer customer) {
-        int id = 0;
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.persist(customer);
-        transaction.commit();
-        id = customer.getCustomerId();
-        session.close();
-        return id;
+        try {
+            logger.info(
+                    "Customer to insert: {}",
+                    customer
+            );
+
+            int id = 0;
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.persist(customer);
+            transaction.commit();
+            id = customer.getCustomerId();
+            session.close();
+
+            logger.info("Customer Inserted.");
+
+            return id;
+        } catch (Exception e) {
+            logger.error(
+                    "Error Inserting Customer: " +
+                            e.getMessage()
+            );
+            throw e;
+        }
     }
 
     /**
@@ -70,11 +117,26 @@ public class CustomerDAO {
      * @param customer The Customer to be deleted.
      */
     public void delete(Customer customer) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.delete(customer);
-        transaction.commit();
-        session.close();
+        try {
+            logger.info(
+                    "Customer to delete: {}",
+                    customer
+            );
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.delete(customer);
+            transaction.commit();
+            session.close();
+
+            logger.info("Customer Inserted.");
+        } catch (Exception e) {
+            logger.error(
+                    "Error deleting Customer: {}",
+                    e.getMessage(), e
+            );
+            throw e;
+        }
     }
 
     /**
@@ -83,15 +145,24 @@ public class CustomerDAO {
      * @return A list of all Customers.
      */
     public List<Customer> getAll() {
-        Session session = sessionFactory.openSession();
+        try {
+            Session session = sessionFactory.openSession();
 
-        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Customer> query = builder.createQuery(Customer.class);
-        Root<Customer> root = query.from(Customer.class);
-        List<Customer> customers = session.createSelectionQuery( query ).getResultList();
+            HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Customer> query = builder.createQuery(Customer.class);
+            Root<Customer> root = query.from(Customer.class);
+            List<Customer> customers = session.createSelectionQuery(
+                    query
+            ).getResultList();
 
-        session.close();
+            session.close();
 
-        return customers;
+            logger.info("All customers displayed successfully.");
+
+            return customers;
+        } catch (Exception e) {
+            logger.error("Error: " + e.getMessage());
+            throw e;
+        }
     }
 }

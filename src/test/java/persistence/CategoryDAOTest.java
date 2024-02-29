@@ -37,7 +37,6 @@ class CategoryDAOTest {
     void getByIdSuccess() {
         Category retrievedCategory = dao.getById(1);
         assertEquals("Electronics", retrievedCategory.getName());
-        // Add more assertions as needed
     }
 
     /**

@@ -8,6 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class OrderDetailDAO {
 
     SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
+    private static final Logger logger = LogManager.getLogger(CategoryDAO.class);
 
     /**
      * Retrieves an OrderDetail by its ID.
@@ -26,10 +29,24 @@ public class OrderDetailDAO {
      * @return The OrderDetail with the specified ID, or null if not found.
      */
     public OrderDetail getById(int id) {
-        Session session = sessionFactory.openSession();
-        OrderDetail OrderDetail = session.get( OrderDetail.class, id );
-        session.close();
-        return OrderDetail;
+        try {
+            logger.info("Order Detail ID: " + id);
+
+            Session session = sessionFactory.openSession();
+            OrderDetail OrderDetail = session.get(OrderDetail.class, id);
+            session.close();
+
+            logger.info("Order Detail found.");
+
+            return OrderDetail;
+
+        } catch (Exception e) {
+            logger.error(
+                    "Error finding Order Detail: " +
+                            e.getMessage()
+            );
+            throw e;
+        }
     }
 
     /**
@@ -38,11 +55,27 @@ public class OrderDetailDAO {
      * @param orderDetail The OrderDetail to be updated or inserted.
      */
     public void update(OrderDetail orderDetail) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.merge(orderDetail);
-        transaction.commit();
-        session.close();
+        try {
+            logger.info(
+                    "Updating Order Detail: {}",
+                    orderDetail
+            );
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.merge(orderDetail);
+            transaction.commit();
+            session.close();
+
+            logger.info("Order Detail Updated.");
+        } catch (Exception e) {
+            logger.error(
+                    "Error updating Order Detail: {}",
+                    e.getMessage(),
+                    e
+            );
+            throw e;
+        }
     }
 
     /**
@@ -52,14 +85,30 @@ public class OrderDetailDAO {
      * @return The ID of the newly inserted OrderDetail.
      */
     public int insert(OrderDetail orderDetail) {
-        int id = 0;
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.persist(orderDetail);
-        transaction.commit();
-        id = orderDetail.getOrderDetailId();
-        session.close();
-        return id;
+        try {
+            logger.info(
+                    "Order Detail to insert: {}",
+                    orderDetail
+            );
+
+            int id = 0;
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.persist(orderDetail);
+            transaction.commit();
+            id = orderDetail.getOrderDetailId();
+            session.close();
+
+            logger.info("Order Detail Inserted.");
+
+            return id;
+        } catch (Exception e) {
+            logger.error(
+                    "Error Inserting Order Detail: " +
+                            e.getMessage()
+            );
+            throw e;
+        }
     }
 
     /**
@@ -68,11 +117,26 @@ public class OrderDetailDAO {
      * @param orderDetail The OrderDetail to be deleted.
      */
     public void delete(OrderDetail orderDetail) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.delete(orderDetail);
-        transaction.commit();
-        session.close();
+        try {
+            logger.info(
+                    "Order Detail to delete: {}",
+                    orderDetail
+            );
+
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.delete(orderDetail);
+            transaction.commit();
+            session.close();
+
+            logger.info("Order Detail Inserted.");
+        } catch (Exception e) {
+            logger.error(
+                    "Error deleting Order Detail: {}",
+                    e.getMessage(), e
+            );
+            throw e;
+        }
     }
 
     /**
@@ -81,15 +145,24 @@ public class OrderDetailDAO {
      * @return A list of all OrderDetails.
      */
     public List<OrderDetail> getAll() {
-        Session session = sessionFactory.openSession();
+        try {
+            Session session = sessionFactory.openSession();
 
-        HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<OrderDetail> query = builder.createQuery(OrderDetail.class);
-        Root<OrderDetail> root = query.from(OrderDetail.class);
-        List<OrderDetail> orderDetails = session.createSelectionQuery( query ).getResultList();
+            HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<OrderDetail> query = builder.createQuery(OrderDetail.class);
+            Root<OrderDetail> root = query.from(OrderDetail.class);
+            List<OrderDetail> orderDetails = session.createSelectionQuery(
+                    query
+            ).getResultList();
 
-        session.close();
+            session.close();
 
-        return orderDetails;
+            logger.info("All order details displayed successfully.");
+
+            return orderDetails;
+        } catch (Exception e) {
+            logger.error("Error: " + e.getMessage());
+            throw e;
+        }
     }
 }
