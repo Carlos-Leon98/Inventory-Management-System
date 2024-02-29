@@ -14,6 +14,13 @@
 ### Week 6
 
 - [X] Design and create Database structure.
-- [ ] Create Logic to create, read, update and delete records (CRUD) from database using Hibernate.
-- [ ] Insert loggers within code to catch errors, info, etc.
-- [ ] Create unit test.
+- [X] Create Logic to create, read, update and delete records (CRUD) from database using Hibernate.
+- [X] Insert loggers within code to catch errors, info, etc.
+- [X] Create unit test.
+
+
+### Week 7
+- [ ] Add more customized methods to DAO files
+- [ ] Creating all needed test class
+- [ ] Research about how to integrate login logic into the project
+- [ ] Reaserch about how to insert Charts within the UI
