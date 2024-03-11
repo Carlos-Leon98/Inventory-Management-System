@@ -20,7 +20,71 @@
 
 
 ### Week 7
-- [ ] Add more customized methods to DAO files
-- [ ] Creating all needed test class
-- [ ] Research about how to integrate login logic into the project
-- [ ] Reaserch about how to insert Charts within the UI
+- [X] Add more customized methods to DAO files
+- [X] Creating all needed test class
+- [X] Research about how to integrate login logic into the project
+- [X] Reaserch about how to insert Charts within the UI
+
+### Week 8
+
+- [ ]  Complete requirements for Checkpoint 1
+- [ ]  Complete requirements for Checkpoint 2
+
+### Spring Break
+
+- [ ]  Complete project plan
+- [ ]  Add all needed user stories to complete the indie project
+- [ ]  Add Times
+- [ ]  Create a generic DAO file to avoid redundancy
+- [ ]  Create at least one jsp to displays data from the database
+    - [ ]  Inventory page
+- [ ]  Implement authentication
+    - [ ]  Create the login page
+- [ ]  Deploy to AWS
+
+### Week 9
+
+- [ ]  Reaserch about how to insert Charts within the UI
+- [ ]  Create wireframe for Orders page
+- [ ]  Research about how to add styles to cognito
+- [ ]  Create database within Amazon RDS
+- [ ]  Create roles and permissions with IAM
+- [ ]  Review Lambda options
+
+### Week 10
+
+- [ ]  Create jsp for sign up page
+- [ ]  Create jsp for login page
+- [ ]  Create jsp for dashboard
+- [ ]  Create jsp for analytics
+- [ ]  Create jsp for Orders
+- [ ]  Create jsp for Add/Edit product
+
+### Week 11
+
+- [ ]  Make Add/Edit product functional
+- [ ]  Implement charts within UI
+- [ ]  Make Delete product functional
+- [ ]  Create API with API Gateway
+
+### Week 12
+
+- [ ]  Make sign up page functional
+- [ ]  Work on documentation
+
+### Week 13 and Week 14
+
+- [ ]  Work on bugs
+- [ ]  Placeholders for specific bugs to fix…
+
+### Week 15
+
+- [ ]  Work on bugs
+- [ ]  Placeholders for specific bugs to fix…
+- [ ]  Check code quality
+- [ ]  Finalize all documentation
+- [ ]  Code complete
+
+### Week 16
+
+- [ ]  Individual project due

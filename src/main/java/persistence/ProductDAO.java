@@ -1,6 +1,6 @@
 package persistence;
 
-import entity.Product;f
+import entity.Product;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
