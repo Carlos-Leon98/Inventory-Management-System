@@ -12,3 +12,4 @@
 | 02/28/2024 | Creating test classes for DAO classes                        | 2     | N/A                                                                     |
 | 02/28/2024 | Adding Loggers within DAO                                    | 1     | N/A                                                                     |
 | 03/11/2024 | Completing Project plan                                      | 1.5   | Project plan might change depends on teacher feedback                   |
+| 03/11/2024 | Adding all user stories                                      | 1     | More user stories could be added, depends on teacher feedback           |
