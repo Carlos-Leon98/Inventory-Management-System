@@ -1,31 +1,62 @@
 # User Stories for MVP
 
-1. **As a user, I want to register for an account.**
-    - Users should be able to create an account with a unique username and password to access the system.
 
-2. **As a user, I want to log in to the system securely.**
-    - Authenticated users should be able to securely log in to their accounts.
+### Register for an Account
+   - As a user, I want to register for an account.
 
-3. **As a user, I want to add a new product to the inventory.**
-    - Users should be able to input details such as product name, description, quantity, and category when adding a new product to the inventory.
+### Secure Login
+   - As a user, I want to log in to the system securely.
 
-4. **As a user, I want to edit a product information.**
-   - Users should be able to edit specific peaces of information of a product that was added in the system.
+### View Inventory List
+   - As a user, I want to view the list of all products in the inventory.
 
-5. **As a user, I want to delete an old product that is no longer on sale.**
-   - Users should be able to delete products that the business consider to delete.
+### Update Product Quantity
+   - As a user, I want to update the quantity of a product in the inventory.
 
-6. **As a user, I want to archive products that are discontinued.**
-   - Users should be able to archive/disable products that are on sale at the moment but eventually they will.
+### Add New Product
+   - As a user, I want to add a new product to the inventory.
 
-7. **As a user, I want to view the list of all products in the inventory.**
-    - Users should have an overview of all products in the inventory, displaying key details such as name and quantity.
+### Edit Product Information
+   - As a user, I want to edit a product's information.
 
-8. **As a user, I want to update the quantity of a product in the inventory.**
-    - Users should be able to edit the quantity of a product to reflect changes in stock levels.
+### Delete Product
+   - As a user, I want to delete an old product that is no longer on sale.
 
-9. **As a user, I want to log out from the system.**
-   - Users should be able to log out from their accounts.
+### Logout
+   - As a user, I want to logout from the system.
 
-10. **Implement Web Service for External Data Integration.**
-   - As a user, I want to integrate external data into the Inventory Management System through a web service (API Gateway).
+### View Add/Edit Product Page
+   - As a user, I want to see the Add/Edit Product page.
+
+### Create Relational Tables (Amazon RDS)
+   - Create necessary relational tables on Amazon RDS.
+
+### Create Roles and Permissions with IAM
+   - Establish roles and permissions using IAM for access control.
+
+### Make Add/Edit Product Page Functional
+   - Implement functionality for the Add/Edit Product page.
+
+### Make UI Product Deletion Functional
+   - Implement functionality for deleting products within the UI.
+
+### View Dashboard
+   - As a user, I want to see the Dashboard of the application.
+
+### View Inventory Page
+   - As a user, I want to see the Inventory page.
+
+### View Orders Page
+   - As a user, I want to see the Orders page.
+
+### View Analytics Page
+   - As a user, I want to see the Analytics page.
+
+### Review Lambda Options (Spike)
+   - Evaluate Lambda options for potential use.
+
+### Create Report Generator
+   - Develop a Report Generator for generating reports.
+
+### Implement Report Generator
+- Integrate the Report Generator to Analytics page.
