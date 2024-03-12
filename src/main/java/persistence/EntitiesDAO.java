@@ -10,11 +10,22 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
+/**
+ * Data Access Object class for handling most of the entities.
+ * @author cleonrivas
+ * @param <T> Represent the entity that is going to be used.
+ */
+
 public class EntitiesDAO<T> {
     private final SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
     private final Logger logger = LogManager.getLogger(EntitiesDAO.class);
     private final Class<T> entityClass;
 
+    /**
+     * Constructor of class EntitiesDAO
+     * @param entityClass in the entity which this class is
+     *                    going to use
+     */
     public EntitiesDAO(Class<T> entityClass) {
         this.entityClass = entityClass;
     }
@@ -116,6 +127,11 @@ public class EntitiesDAO<T> {
         }
     }
 
+    /**
+     * Retrieves a list of all Entities.
+     *
+     * @return A list of all Entities.
+     */
     public List<T> getAll() {
         try {
             Session session = sessionFactory.openSession();
