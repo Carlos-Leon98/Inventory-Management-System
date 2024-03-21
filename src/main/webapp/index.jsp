@@ -4,8 +4,8 @@
 
 <h2>User Display Exercise</h2>
 
-<a href = "searchUser">Go to the User Search</a>
-<form action="searchUser" class="form-inline">
+<a href = "searchProduct">Go to the User Search</a>
+<form action="searchProduct" class="form-inline">
     <div class="form-group">
         <label for="searchTerm">Search</label>
         <input type="text" class="form-control" id="searchTerm" name="searchTerm" aria-describedby="searchTermHelp" placeholder="Enter Last Name">

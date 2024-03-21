@@ -11,25 +11,27 @@
 
 <script type="text/javascript" class="init">
     $(document).ready(function () {
-        $('#userTable').DataTable();
+        $('#productTable').DataTable();
     })
 </script>
 <html><body>
 
 <div class="container-fluid">
     <h2>Search Results: </h2>
-    <table id="userTable" class="display">
+    <table id="productTable" class="display">
         <thead>
-        <th>Name</th>
-        <th>User</th>
-        <th>Age</th>
+        <th>Product</th>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>Price</th>
         </thead>
         <tbody>
-        <c:forEach var="user" items="${users}">
+        <c:forEach var="product" items="${products}">
             <tr>
-                <td>${user.firstName} ${user.lastName}</td>
-                <td>${user.userName}</td>
-                <td>${user.age}</td>
+                <td>${product.name}</td>
+                <td>${product.description}</td>
+                <td>${product.quantity}</td>
+                <td>${product.price}</td>
             </tr>
         </c:forEach>
         </tbody>

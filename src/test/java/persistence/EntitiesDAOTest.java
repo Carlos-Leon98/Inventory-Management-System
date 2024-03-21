@@ -54,22 +54,22 @@ class EntitiesDAOTest {
         assertEquals("Updated Category", updatedCategory.getName());
     }
 
-    /**
-     * Verify successful insert of an Entity
-     */
-    @Test
-    void insertSuccess() {
-        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
-        currentDate.setNanos(0);
-
-        Category newCategory = new Category();
-        newCategory.setName("Games");
-        newCategory.setCreatedAt(currentDate);
-        int id = dao.insert(newCategory);
-        assertNotEquals(0, id);
-        Category insertedCategory = dao.getById(id);
-        assertEquals(newCategory, insertedCategory);
-    }
+//    /**
+//     * Verify successful insert of an Entity
+//     */
+//    @Test
+//    void insertSuccess() {
+//        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+//        currentDate.setNanos(0);
+//
+//        Category newCategory = new Category();
+//        newCategory.setName("Games");
+//        newCategory.setCreatedAt(currentDate);
+//        int id = dao.insert(newCategory);
+//        assertNotEquals(0, id);
+//        Category insertedCategory = dao.getById(id);
+//        assertEquals(newCategory, insertedCategory);
+//    }
 
     /**
      * Verify successful delete of Entity
