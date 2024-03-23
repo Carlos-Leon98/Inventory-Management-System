@@ -1,5 +1,6 @@
 package persistence;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.apache.logging.log4j.LogManager;
@@ -136,11 +137,12 @@ public class EntitiesDAO<T> {
         try {
             Session session = sessionFactory.openSession();
 
-            CriteriaQuery<T> query = session
-                    .getCriteriaBuilder()
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<T> query = builder
                     .createQuery(entityClass);
-            Root<T> root = query.from(entityClass);
-            List<T> entities = session.createQuery(query)
+            query.from(entityClass);
+            List<T> entities = session
+                    .createQuery(query)
                     .getResultList();
 
             session.close();

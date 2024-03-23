@@ -1,17 +1,28 @@
 <%@include file="head.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Management System</title>
+    <!-- Add any additional meta tags, stylesheets, or scripts here -->
+
+</head>
 <body>
 
-<h2>User Display Exercise</h2>
+<!-- Sidebar -->
+<div class="sidebar">
+    <a href="#">Dashboard</a>
+    <a href="inventory.jsp">Inventory</a>
+    <a href="#">Analytics</a>
+    <a href="#">Orders</a>
+</div>
 
-<a href = "searchProduct">Go to the User Search</a>
-<form action="searchProduct" class="form-inline">
-    <div class="form-group">
-        <label for="searchTerm">Search</label>
-        <input type="text" class="form-control" id="searchTerm" name="searchTerm" aria-describedby="searchTermHelp" placeholder="Enter Last Name">
-    </div>
-    <button type="submit" name="submit" value="search" class="btn btn-primary">Search</button>
-    <button type="submit" name="submit" value="viewAll" class="btn btn-primary">View All Users</button>
-</form>
+<!-- Page content -->
+<div class="content">
+    <h1>Welcome to Inventory Management System</h1>
+    <!-- Add main content here -->
+</div>
+
 </body>
 </html>
