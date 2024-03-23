@@ -1,14 +1,10 @@
 package persistence;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-
 
 /**
  * This file provides a SessionFactory for use with DAOs using Hibernate
@@ -18,46 +14,41 @@ import org.hibernate.cfg.Configuration;
  */
 public class SessionFactoryProvider {
 
-    private static final Logger logger = LogManager.getLogger(SessionFactoryProvider.class);
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    private static SessionFactory sessionFactory;
+    private static StandardServiceRegistry registry;
 
     /**
-     * Private constructor to prevent instantiation of this utility class.
+     * Create session factory.
      */
-    private SessionFactoryProvider() {
-        throw new AssertionError("Utility class - do not instantiate");
+    public static void createSessionFactory() {
+
+        // Create registry
+        registry = new StandardServiceRegistryBuilder()
+                .configure()
+                .build();
+
+        // Create MetadataSources
+        MetadataSources sources = new MetadataSources(registry);
+
+        // Create Metadata
+        Metadata metadata = sources.getMetadataBuilder().build();
+
+        // Create SessionFactory
+        sessionFactory = metadata
+                .getSessionFactoryBuilder()
+                .build();
     }
 
     /**
-     * Build the SessionFactory.
-     *
-     * @return the SessionFactory
-     */
-    private static SessionFactory buildSessionFactory() {
-        try {
-            // Create registry
-            StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
-
-            // Create MetadataSources
-            MetadataSources sources = new MetadataSources(registry);
-
-            // Create Metadata
-            Metadata metadata = sources.getMetadataBuilder().build();
-
-            // Create SessionFactory
-            return metadata.getSessionFactoryBuilder().build();
-        } catch (Exception e) {
-            logger.error("Error creating SessionFactory: " + e.getMessage());
-            throw new ExceptionInInitializerError(e);
-        }
-    }
-
-    /**
-     * Gets the session factory.
+     * Gets session factory.
      *
      * @return the session factory
      */
     public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            createSessionFactory();
+        }
         return sessionFactory;
+
     }
 }
