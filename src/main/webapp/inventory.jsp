@@ -10,11 +10,8 @@
 <%@ include file="taglib.jsp" %>
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Inventory</title>
-</head>
 <body>
+
 <h1>Inventory</h1>
 <form action="searchProduct" method="get">
     <input type="text" name="searchTerm" placeholder="Enter Product ID">
